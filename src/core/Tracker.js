@@ -1,4 +1,4 @@
-import { Hands } from '@mediapipe/hands';
+import '@mediapipe/hands';
 
 export class Tracker {
     constructor() {
@@ -6,7 +6,12 @@ export class Tracker {
         this.history = [];
         this.historySize = 5; // Configurable smoothing window
 
-        this.hands = new Hands({
+        const HandsConstructor = globalThis.Hands;
+        if (!HandsConstructor) {
+            throw new Error('MediaPipe Hands failed to load.');
+        }
+
+        this.hands = new HandsConstructor({
             locateFile: (file) => {
                 return `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`;
             }
